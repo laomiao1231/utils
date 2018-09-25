@@ -1,0 +1,70 @@
+public static byte[] readZipAsBytes(File file) throws ZipException, IOException {
+    	ZipFile zip = new ZipFile(file);
+        FileInputStream fis = new FileInputStream(file);
+        ZipInputStream zis = new ZipInputStream(fis);
+        ZipEntry entry = null;
+        InputStream input = null;
+        while((entry = zis.getNextEntry()) != null){
+        	if(entry.getName().endsWith(".txt")){
+                input = zip.getInputStream(entry);
+            }
+        }
+        int length = input.available();  
+    	byte[] buffer = new byte[length];
+	    input.read(buffer, 0, length);
+	    if(input != null){
+    		input.close();
+    	}
+        if(zip != null){
+			zip.close();	
+		}
+		if(fis != null) {
+			fis.close();
+		}
+		if(zis !=null) {
+			zis.close();
+		}
+        return buffer;
+    }
+	
+	
+	
+	 public static void unZip(String filePath, String unZipPath) throws IOException{
+		InputStream inStream = null;
+		BufferedInputStream bis = null;
+		ZipInputStream zis = null;
+		ZipFile zip = null;
+		try{
+			File file = new File(filePath);
+	        zip = new ZipFile(file);
+	        bis = new BufferedInputStream(new FileInputStream(file));
+	        zis = new ZipInputStream(bis);
+	        ZipEntry entry;
+	        while((entry = zis.getNextEntry()) != null){
+	       	 String fileName = entry.getName();
+	       	 inStream = zip.getInputStream(entry);
+	       	 String outPath = (unZipPath + File.separator + fileName);
+	       	 OutputStream outStream = new FileOutputStream(outPath);
+	       	 
+	       	 byte[] buffer = new byte[1024];
+	       	 int len;
+	       	 while((len=inStream.read(buffer))>0){
+	       		 outStream.write(buffer, 0, len);
+	       	 }
+	       	 outStream.close();
+	        }
+		} finally {
+			if(zip != null){
+				zip.close();	
+			}
+			if(bis != null) {
+				bis.close();
+			}
+			if(zis !=null) {
+				zis.close();
+			}
+			if(inStream != null) {
+				inStream.close();
+			}
+		}
+    }

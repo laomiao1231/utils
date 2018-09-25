@@ -1,0 +1,61 @@
+public static String sendAndReceiveCIITCCompleteUpload(String body, String httpRequestURL, String host, int httpRequestTimeout) {
+		URL url = null;
+        HttpsURLConnection httpurlconnection = null;
+        BufferedReader reader = null;
+		StringBuffer stringBuffer = new StringBuffer();
+		try {
+			url = new URL(httpRequestURL);
+            httpurlconnection = (HttpsURLConnection) url.openConnection();
+            httpurlconnection.setSSLSocketFactory(new TLSSocketConnectionFactory());
+            httpurlconnection.setDoInput(true);
+            httpurlconnection.setDoOutput(true);
+            httpurlconnection.setConnectTimeout(httpRequestTimeout);
+            httpurlconnection.setReadTimeout(httpRequestTimeout);
+            httpurlconnection.setRequestProperty("Host", host);
+            httpurlconnection.setRequestProperty("Accept", "*/*");
+            httpurlconnection.setRequestProperty("Content-Length", String.valueOf(body.getBytes().length));
+            httpurlconnection.setRequestProperty("Content-Type", "application/xml");
+            httpurlconnection.setRequestMethod("POST");
+            httpurlconnection.setHostnameVerifier(new NoopHostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    // 直接返回true
+                    return true;
+                }
+            });
+            httpurlconnection.connect();
+            
+            OutputStream dos = httpurlconnection.getOutputStream();
+            dos.write(body.getBytes("UTF-8"));
+	        dos.flush();
+	        dos.close();
+	        
+            int responseCode = httpurlconnection.getResponseCode();
+            if(responseCode == HttpStatus.SC_OK){
+                //得到响应流
+                InputStream inputStream = httpurlconnection.getInputStream();
+                //获取响应
+                reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                String line = "";
+                while ((line = reader.readLine()) != null){
+                	log.debug("sendAndReceiveCIITCInitPartUploade response line: " + line);
+                    stringBuffer.append(line);
+                }
+                reader.close();
+            }
+		    log.debug("Success to call sendAndReceiveCIITCCompleteUpload service");
+		   
+		} catch (SocketTimeoutException te) {
+			te.printStackTrace();
+			
+			log.debug("Failed to call sendAndReceiveCIITCCompleteUpload service SocketTimeoutException: " + te.getMessage(), te);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			log.debug("Failed to call sendAndReceiveCIITCCompleteUpload service: " + e.getMessage(), e);
+		} finally{
+			httpurlconnection.disconnect();
+		}
+		
+		return stringBuffer.toString();
+	}
+	}
