@@ -12,3 +12,10 @@
 
 # java sftp
 参考：file-server.jar
+
+# java发送邮件及短信
+参考：mail和sms
+
+# java mina框架
+mina是基于nio开发出来的一个无阻塞高性能通信框架，能够处理socket无法解决的高并发问题
+参考：mina
