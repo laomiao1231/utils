@@ -1,7 +1,7 @@
 # utils
-常用工具类
-RedisLock.java redis简单锁实现秒杀
-SerialNumberUtil.java 生成数字序列
+常用工具类<br/>
+RedisLock.java redis简单锁实现秒杀<br/>
+SerialNumberUtil.java 生成数字序列<br/>
 SftpUtil.java sftp连接工具类
 
 # http使用TLSv1.2协议上传文件
