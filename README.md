@@ -1,5 +1,8 @@
 # utils
 常用工具类
+RedisLock.java redis简单锁实现秒杀
+SerialNumberUtil.java 生成数字序列
+SftpUtil.java sftp连接工具类
 
 # http使用TLSv1.2协议上传文件
 由于jdk1.6不支持TLSv1.2协议，需要使用第三方加密包bcprov-jdk15on-160.jar，工具类为TLSSocketConnectionFactory.java，上传大文件参考：HttpUtils.txt
